@@ -1,0 +1,1018 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shreetika ❤️</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Georgia", serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: #fff;
+    background:
+        radial-gradient(circle at top, #3b1d35 0%, #160d19 45%, #09060c 100%);
+}
+
+/* Floating hearts */
+
+.hearts {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.heart {
+    position: absolute;
+    bottom: -50px;
+    color: rgba(255, 130, 170, 0.55);
+    font-size: 18px;
+    animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+    }
+
+    15% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Main */
+
+.container {
+    position: relative;
+    z-index: 2;
+    width: min(700px, 92%);
+    margin: auto;
+    padding: 50px 0 80px;
+}
+
+.hero {
+    text-align: center;
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.small {
+    color: #f5a9c7;
+    letter-spacing: 4px;
+    font-size: 12px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: clamp(42px, 10vw, 78px);
+    font-weight: normal;
+    line-height: 1;
+    text-shadow: 0 0 30px rgba(255, 120, 170, .35);
+}
+
+.subtitle {
+    margin-top: 25px;
+    color: #e8ccd8;
+    font-size: 17px;
+    line-height: 1.8;
+    max-width: 500px;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: .3s ease;
+}
+
+.start-btn {
+    margin-top: 40px;
+    padding: 15px 35px;
+    border-radius: 40px;
+    color: white;
+    background: linear-gradient(135deg, #d94f83, #8d315d);
+    box-shadow: 0 10px 35px rgba(217, 79, 131, .25);
+    font-size: 16px;
+}
+
+.start-btn:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 15px 45px rgba(217, 79, 131, .4);
+}
+
+/* Game sections */
+
+.game {
+    display: none;
+    min-height: 90vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.game.active {
+    display: flex;
+    animation: fadeIn .7s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.game-number {
+    color: #f39abc;
+    font-size: 13px;
+    letter-spacing: 3px;
+    margin-bottom: 12px;
+}
+
+.game h2 {
+    font-size: 34px;
+    font-weight: normal;
+    margin-bottom: 12px;
+}
+
+.game-description {
+    color: #d6b9c7;
+    margin-bottom: 30px;
+}
+
+/* Game 1 */
+
+.big-heart {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    background: rgba(255, 80, 140, .08);
+    border: 1px solid rgba(255, 130, 170, .3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 75px;
+    cursor: pointer;
+    animation: heartbeat 1.3s infinite;
+    user-select: none;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+}
+
+.counter {
+    margin-top: 25px;
+    color: #f5aac6;
+}
+
+/* Game 2 */
+
+.memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 75px);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.card {
+    width: 75px;
+    height: 75px;
+    perspective: 700px;
+    cursor: pointer;
+}
+
+.card-inner {
+    width: 100%;
+    height: 100%;
+    transition: transform .5s;
+    transform-style: preserve-3d;
+    position: relative;
+}
+
+.card.flipped .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.front {
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.12);
+}
+
+.back {
+    background: #54233f;
+    transform: rotateY(180deg);
+}
+
+/* GAME 3 */
+
+let catchCount = 0;
+
+const movingHeart = document.getElementById("movingHeart");
+const catchArea = document.getElementById("catchArea");
+
+function moveHeart() {
+
+    const heartWidth = movingHeart.offsetWidth;
+    const heartHeight = movingHeart.offsetHeight;
+
+    const maxX = catchArea.clientWidth - heartWidth;
+    const maxY = catchArea.clientHeight - heartHeight;
+
+    const randomX = Math.max(0, Math.random() * maxX);
+    const randomY = Math.max(0, Math.random() * maxY);
+
+    movingHeart.style.left = randomX + "px";
+    movingHeart.style.top = randomY + "px";
+}
+
+movingHeart.addEventListener("click", function() {
+
+    catchCount++;
+
+    document.getElementById("catchCount").textContent = catchCount;
+
+    if (catchCount >= 5) {
+
+        movingHeart.style.display = "none";
+
+        document.getElementById("message3")
+            .classList.add("show");
+
+        document.getElementById("next3")
+            .classList.add("show");
+
+    } else {
+
+        moveHeart();
+    }
+
+});
+
+/* Put the heart in a random position when Game 3 loads */
+moveHeart();
+/* Game 4 */
+
+.question {
+    background: rgba(255,255,255,.045);
+    padding: 30px;
+    border-radius: 25px;
+    border: 1px solid rgba(255,255,255,.1);
+    width: min(500px, 100%);
+}
+
+.options {
+    display: grid;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.option {
+    padding: 15px;
+    border-radius: 15px;
+    background: rgba(255,255,255,.06);
+    color: white;
+    border: 1px solid rgba(255,255,255,.1);
+}
+
+.option:hover {
+    background: rgba(255,100,150,.15);
+    transform: translateY(-2px);
+}
+
+/* Game 5 */
+
+.love-meter {
+    width: 100%;
+    max-width: 450px;
+    height: 20px;
+    background: rgba(255,255,255,.08);
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 30px 0;
+}
+
+.love-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #e54f86, #ffb0ca);
+    border-radius: 20px;
+    transition: width 2s ease;
+}
+
+/* Message */
+
+.message {
+    margin-top: 35px;
+    padding: 25px;
+    max-width: 500px;
+    background: rgba(255,255,255,.045);
+    border-radius: 25px;
+    border: 1px solid rgba(255,160,190,.15);
+    color: #f6dce6;
+    line-height: 1.8;
+    display: none;
+    animation: fadeIn .7s ease;
+}
+
+.message.show {
+    display: block;
+}
+
+.next-btn {
+    margin-top: 25px;
+    padding: 13px 30px;
+    border-radius: 30px;
+    background: #fff;
+    color: #481d34;
+    display: none;
+}
+
+.next-btn.show {
+    display: inline-block;
+}
+
+.next-btn:hover {
+    transform: translateY(-3px);
+}
+
+/* Final */
+
+.final {
+    display: none;
+    text-align: center;
+    min-height: 90vh;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.final.active {
+    display: flex;
+    animation: fadeIn 1s ease;
+}
+
+.final-heart {
+    font-size: 90px;
+    animation: heartbeat 1.3s infinite;
+    margin-bottom: 25px;
+}
+
+.final h2 {
+    font-size: 42px;
+    font-weight: normal;
+}
+
+.letter {
+    margin-top: 25px;
+    max-width: 580px;
+    color: #e7ccd8;
+    line-height: 2;
+    font-size: 17px;
+}
+
+.signature {
+    margin-top: 30px;
+    color: #f2a2c0;
+    font-style: italic;
+    font-size: 20px;
+}
+
+.restart {
+    margin-top: 35px;
+    padding: 12px 28px;
+    border-radius: 30px;
+    background: transparent;
+    color: #f4a4c2;
+    border: 1px solid #f4a4c2;
+}
+
+@media(max-width:500px) {
+    .memory-grid {
+        grid-template-columns: repeat(4, 62px);
+        gap: 7px;
+    }
+
+    .card {
+        width: 62px;
+        height: 62px;
+    }
+
+    .catch-area {
+        height: 260px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="hearts" id="hearts"></div>
+
+<div class="container">
+
+    <!-- INTRO -->
+
+    <section class="hero" id="intro">
+        <div class="small">Mero confession</div>
+
+        <h1>For You,<br>Shreetika ♡</h1>
+
+        <p class="subtitle">
+            Tmi jasto mero lagi koi ni xaina mata
+         maile chatgpt ra malai aaune coding use garera tmro lagi yo web banaye khatrai time lagyo im sorry
+        </p>
+
+        <button class="start-btn" onclick="startGames()">
+            Lets play sweetie♡
+        </button>
+    </section>
+
+
+    <!-- GAME 1 -->
+
+    <section class="game" id="game1">
+
+        <div class="game-number">01 / 05</div>
+
+        <h2>Just button ma 7 choti click gardeu hehe</h2>
+
+        <p class="game-description">
+            Tap the heart 7 times.
+        </p>
+
+        <div class="big-heart" id="bigHeart">
+            ❤️
+        </div>
+
+        <div class="counter">
+            Hearts caught: <span id="heartCount">0</span> / 7
+        </div>
+
+        <div class="message" id="message1">
+            Aaihaii cutie did it ❤️<br><br>
+            Malai tmro aati nei maya lagxa ani youre more than enough for me, I love you a lot
+        </div>
+
+        <button class="next-btn" id="next1" onclick="nextGame(2)">
+            Continue ♡
+        </button>
+
+    </section>
+
+
+    <!-- GAME 2 -->
+
+    <section class="game" id="game2">
+
+        <div class="game-number">02 / 05</div>
+
+        <h2>Tmro fav, Memory!!</h2>
+
+        <p class="game-description">
+            Find all the matching hearts.
+        </p>
+
+        <div class="memory-grid" id="memoryGrid"></div>
+
+        <div class="message" id="message2">
+            Yo game mata tmi heroo honi ♡<br><br>
+            Just wanted to let you know ki you make me the happiest person ani i appreciate you a lot
+        </div>
+
+        <button class="next-btn" id="next2" onclick="nextGame(3)">
+            Continue ♡
+        </button>
+
+    </section>
+
+
+    <!-- GAME 3 -->
+
+    <section class="game" id="game3">
+
+        <div class="game-number">03 / 05</div>
+
+        <h2>Feri click garne wola cuz malai aru kei aayena</h2>
+
+        <p class="game-description">
+            Catch 5 little hearts before they disappear.
+        </p>
+
+        <div class="catch-area" id="catchArea">
+            <div class="catch-heart" id="movingHeart">♡</div>
+        </div>
+
+        <div class="counter">
+            Caught: <span id="catchCount">0</span> / 5
+        </div>
+
+        <div class="message" id="message3">
+            Aww my babe I hope you like it 💗<br><br>
+            Maile sakeko vaye hami bich sabai syano syano moment hru lai esto capture garera esari nei collect garera rakhthiye maya I love you sanu malai harek juni ma tmi matra chaiyo
+        </div>
+
+        <button class="next-btn" id="next3" onclick="nextGame(4)">
+            Continue ♡
+        </button>
+
+    </section>
+
+
+    <!-- GAME 4 -->
+
+    <section class="game" id="game4">
+
+        <div class="game-number">04 / 05</div>
+
+        <h2>A Very Important Question</h2>
+
+        <p class="game-description">
+            There is definitely a correct answer.
+        </p>
+
+        <div class="question">
+
+            <h3>
+                What is the thing I love the most?
+            </h3>
+
+            <div class="options">
+
+                <button class="option" onclick="answer(false)">
+                    Guitar 🎸
+                </button>
+
+                <button class="option" onclick="answer(false)">
+                    Bike 🚴🏻‍♀️
+                </button>
+
+                <button class="option" onclick="answer(true)">
+                    Shreetika. Obviously. ❤️
+                </button>
+
+                <button class="option" onclick="answer(false)">
+                    Game 👾
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="message" id="message4">
+            Correct. tmi nei ta honi maile ekdum maan paraune bhaneko fuchi kaa aru aru click gareko fuchiii ❤️<br><br>
+            ma yo sansaar ma jata sukai vayeni I would always only want to be beside you cuz youre the place where I feel belonged anii loved hehe
+        </div>
+
+        <button class="next-btn" id="next4" onclick="nextGame(5)">
+            One last thing ♡
+        </button>
+
+    </section>
+
+
+    <!-- GAME 5 -->
+
+    <section class="game" id="game5">
+
+        <div class="game-number">05 / 05</div>
+
+        <h2>100% kati maya garxu tmilai herum haita?</h2>
+
+        <p class="game-description">
+            Press the button and find out.
+        </p>
+
+        <div class="love-meter">
+            <div class="love-fill" id="loveFill"></div>
+        </div>
+
+        <button class="start-btn" onclick="fillLove()">
+            Aau herum ❤️
+        </button>
+
+        <div class="message" id="message5">
+            Error... ❤️<br><br>
+            Shiiii meter nei bhachiyoo.<br>
+            Cuz mero love tmro laii measure garna sakideina its infinite nita heheheh I love you
+        </div>
+
+        <button class="next-btn" id="next5" onclick="finish()">
+            Open your final message ♡
+        </button>
+
+    </section>
+
+
+    <!-- FINAL -->
+
+    <section class="final" id="final">
+
+        <div class="final-heart">❤️</div>
+
+        <div class="small">Aaihaii sab game sidhyoo</div>
+
+        <h2>Maya yo message tmro lai</h2>
+
+        <p class="letter">
+            Tmilai kaile ni garo vayo bhane please yo website kholnu aani yo game hru khelera distract hunu cuz I really love you a lot
+            <br><br>
+
+            Maya, as I always say malai tmilai maya garna kei reaason nei chaideina
+            If you wanna know the reason, its your existence
+            In the quiet moments, when we are laughing ani joking with each other
+            I find joy in those every small moment with you
+            and even when words don't come easily.
+            <br><br>
+
+            You're someone I want to keep choosing.
+            Not just on the beautiful days,
+            but on the hard ones too.
+            <br><br>
+
+            Maile yo mini games hru ali AI ko help use gardei 
+            Banaunu ko reason eutai matra ho
+            <br><br>
+
+            <strong>
+                I love you. More than this little website
+                could ever explain. ❤️
+            </strong>
+        </p>
+
+        <div class="signature">
+            — Forever yours, Lui ♡
+        </div>
+
+        <button class="restart" onclick="location.reload()">
+            Play it again
+        </button>
+
+    </section>
+
+</div>
+
+
+<script>
+
+/* Floating hearts */
+
+const heartContainer = document.getElementById("hearts");
+
+const heartSymbols = ["♡", "♥", "❤", "✦"];
+
+for(let i = 0; i < 25; i++) {
+
+    const heart = document.createElement("div");
+
+    heart.className = "heart";
+
+    heart.innerHTML =
+        heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+
+    heart.style.left = Math.random() * 100 + "%";
+
+    heart.style.fontSize =
+        (12 + Math.random() * 20) + "px";
+
+    heart.style.animationDuration =
+        (7 + Math.random() * 9) + "s";
+
+    heart.style.animationDelay =
+        Math.random() * 8 + "s";
+
+    heartContainer.appendChild(heart);
+}
+
+
+/* Start */
+
+function startGames() {
+
+    document.getElementById("intro").style.display = "none";
+
+    document.getElementById("game1")
+        .classList.add("active");
+}
+
+
+/* Game navigation */
+
+function nextGame(number) {
+
+    document.querySelectorAll(".game")
+        .forEach(game => game.classList.remove("active"));
+
+    document.getElementById("game" + number)
+        .classList.add("active");
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* GAME 1 */
+
+let heartCount = 0;
+
+document.getElementById("bigHeart")
+    .addEventListener("click", function() {
+
+        heartCount++;
+
+        document.getElementById("heartCount")
+            .textContent = heartCount;
+
+        if(heartCount >= 7) {
+
+            document.getElementById("message1")
+                .classList.add("show");
+
+            document.getElementById("next1")
+                .classList.add("show");
+        }
+    });
+
+
+/* GAME 2 - MEMORY */
+
+const symbols = ["❤️", "🌙", "🌹", "✨",
+                 "❤️", "🌙", "🌹", "✨"];
+
+symbols.sort(() => Math.random() - .5);
+
+const memoryGrid =
+    document.getElementById("memoryGrid");
+
+let firstCard = null;
+let secondCard = null;
+let locked = false;
+let matched = 0;
+
+symbols.forEach(symbol => {
+
+    const card = document.createElement("div");
+
+    card.className = "card";
+
+    card.innerHTML = `
+        <div class="card-inner">
+            <div class="card-face front">♡</div>
+            <div class="card-face back">${symbol}</div>
+        </div>
+    `;
+
+    card.addEventListener("click", () => {
+
+        if(locked ||
+           card === firstCard ||
+           card.classList.contains("matched"))
+            return;
+
+        card.classList.add("flipped");
+
+        if(!firstCard) {
+
+            firstCard = card;
+            return;
+        }
+
+        secondCard = card;
+        locked = true;
+
+        const firstSymbol =
+            firstCard.querySelector(".back").textContent;
+
+        const secondSymbol =
+            secondCard.querySelector(".back").textContent;
+
+        if(firstSymbol === secondSymbol) {
+
+            firstCard.classList.add("matched");
+            secondCard.classList.add("matched");
+
+            matched++;
+
+            resetCards();
+
+            if(matched === 4) {
+
+                document.getElementById("message2")
+                    .classList.add("show");
+
+                document.getElementById("next2")
+                    .classList.add("show");
+            }
+
+        } else {
+
+            setTimeout(() => {
+
+                firstCard.classList.remove("flipped");
+                secondCard.classList.remove("flipped");
+
+                resetCards();
+
+            }, 800);
+        }
+
+    });
+
+    memoryGrid.appendChild(card);
+});
+
+
+function resetCards() {
+
+    [firstCard, secondCard] = [null, null];
+
+    locked = false;
+}
+
+
+/* GAME 3 */
+
+let catchCount = 0;
+
+const movingHeart =
+    document.getElementById("movingHeart");
+
+const catchArea =
+    document.getElementById("catchArea");
+
+function moveHeart() {
+
+    const maxX =
+        catchArea.clientWidth - 40;
+
+    const maxY =
+        catchArea.clientHeight - 40;
+
+    movingHeart.style.left =
+        Math.random() * maxX + "px";
+
+    movingHeart.style.top =
+        Math.random() * maxY + "px";
+}
+
+movingHeart.addEventListener("click", () => {
+
+    catchCount++;
+
+    document.getElementById("catchCount")
+        .textContent = catchCount;
+
+    if(catchCount >= 5) {
+
+        movingHeart.style.display = "none";
+
+        document.getElementById("message3")
+            .classList.add("show");
+
+        document.getElementById("next3")
+            .classList.add("show");
+
+    } else {
+
+        moveHeart();
+    }
+
+});
+
+moveHeart();
+
+
+/* GAME 4 */
+
+function answer(correct) {
+
+    if(correct) {
+
+        document.getElementById("message4")
+            .classList.add("show");
+
+        document.getElementById("next4")
+            .classList.add("show");
+
+    } else {
+
+        alert("Hmm... You really think malai tyo maan parxa? try again fuchi ❤️");
+    }
+}
+
+
+/* GAME 5 */
+
+function fillLove() {
+
+    const fill =
+        document.getElementById("loveFill");
+
+    fill.style.width = "100%";
+
+    setTimeout(() => {
+
+        document.getElementById("message5")
+            .classList.add("show");
+
+        document.getElementById("next5")
+            .classList.add("show");
+
+    }, 2200);
+}
+
+
+/* FINAL */
+
+function finish() {
+
+    document.querySelectorAll(".game")
+        .forEach(game =>
+            game.classList.remove("active"));
+
+    document.getElementById("final")
+        .classList.add("active");
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+    createFinalHearts();
+}
+
+
+/* Extra hearts at the end */
+
+function createFinalHearts() {
+
+    for(let i = 0; i < 30; i++) {
+
+        setTimeout(() => {
+
+            const heart =
+                document.createElement("div");
+
+            heart.className = "heart";
+
+            heart.innerHTML = "♥";
+
+            heart.style.left =
+                Math.random() * 100 + "%";
+
+            heart.style.fontSize =
+                (15 + Math.random() * 25) + "px";
+
+            heart.style.animationDuration =
+                (4 + Math.random() * 5) + "s";
+
+            heartContainer.appendChild(heart);
+
+        }, i * 150);
+    }
+}
+
+</script>
+
+</body>
+</html>
